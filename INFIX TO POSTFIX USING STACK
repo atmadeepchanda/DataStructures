@@ -1,0 +1,124 @@
+INFIX TO POSTFIX USING STACK
+
+
+
+#include<stdio.h>
+#include<ctype.h>
+#include<string.h>
+int tos;
+
+int isEmpty()
+{
+return tos==-1;
+}
+char pop(char* arr)
+{
+if(!isEmpty())
+return arr[tos--];
+}
+int priority(char x)
+{
+if(x == '(')
+return 0;
+else if(x == '+' || x == '-')
+return 1;
+else if(x == '*' || x == '/')
+return 2;
+else
+return 3;
+}
+int asso(char ch)
+{
+switch (ch)
+{
+case '+':
+case '-':
+case '*':
+case '/':
+case '%':
+return 1;//1 means Associativity is LEFT TO RIGHT
+case '^':
+return 0;//0 means Associativity is RIGHT TO LEFT
+}
+}
+void push(char arr[],char n)
+{
+
+arr[++tos]=n;
+
+}
+
+void iToO(char inf[],char p[],char arr[])
+{
+int i=0;
+char c;
+
+while(inf[i])
+{
+if(isalpha(inf[i])){
+c=inf[i];
+char s[]={c,'\0'};
+strcat(p,s);
+}
+else if(inf[i]=='(')
+        push(arr,inf[i]);
+else if(inf[i]==')')
+{
+while(arr[tos]!='('){
+c=pop(arr);
+char s[]={c,'\0'};
+strcat(p,s);
+}tos--;
+}
+else if(isEmpty())
+    push(arr,inf[i]);
+else if(priority(arr[tos])<priority(inf[i])){
+push(arr,inf[i]);
+
+}
+else if((priority(inf[i])<priority(arr[tos]))||((priority(inf[i])==priority(arr[tos]))&&((asso(inf[i])==1) &&(asso(arr[tos])==1))))
+{
+while((priority(inf[i])<=priority(arr[tos]))&&(tos!=-1))
+{
+c=pop(arr);
+char s[] ={c,'\0'};
+strcat(p,s);
+}
+
+push(arr,inf[i]);
+}
+else{
+push(arr,inf[i]);
+
+}
+i++;
+
+
+}
+while(tos!=-1)
+{
+    c=pop(arr);
+char s[] ={c,'\0'};
+strcat(p,s);
+}
+printf("%s",p);
+
+
+}
+
+
+void main()
+{
+int temp;
+char inf[50];
+char p[50]="";
+char arr[50];
+tos=-1;
+
+printf("\nEnter the Infix String\n");
+gets(inf);
+
+printf("The Postfix String is");
+iToO(inf,p,arr);
+}
+
