@@ -1,0 +1,141 @@
+QUEUE USING 2 STACKS
+
+
+#include<stdio.h>
+#include<stdlib.h>
+#define size 10
+
+int tos1,tos2;
+
+int isEmpty1()
+{
+    return tos1==-1;
+}
+int isFull1()
+{
+    return tos1==size-1;
+}
+int isEmpty2()
+{
+    return tos2==-1;
+}
+int isFull2()
+{
+    return tos2==size-1;
+}
+int isEmptyQ()
+{
+    return ((tos1==-1)&&(tos2==-1));
+}
+int isFullQ()
+{
+    return ((tos1+tos2+2)==size);
+}
+int popFrom1(int* arr1)
+{
+    if(!isEmpty1())
+        return arr1[tos1--];
+}
+void pushTo1(int* arr1,int n)
+{
+    if(!isFull1())
+        arr1[++tos1]=n;
+}
+void pushTo2(int* arr2,int* arr1)
+{
+    int n;
+
+        while(!isEmpty1())
+        {
+            n=popFrom1(arr1);
+            arr2[++tos2]=n;
+        }
+
+}
+void popFrom2(int* arr2)
+{
+    if(!isEmpty2())
+        printf("%d",arr2[tos2--]);
+}
+void Enqueue(int* arr1,int n)
+{
+    if(!isFullQ())
+        pushTo1(arr1,n);
+
+}
+void Dequeue(int* arr1,int* arr2)
+{
+    if(isEmptyQ())
+        printf("Underflow");
+    else if(tos2!=-1)
+        popFrom2(arr2);
+    else
+    {
+        pushTo2(arr2,arr1);
+        popFrom2(arr2);
+    }
+}
+void print2(int* arr2)
+{
+    int top;
+    for(top=tos2;top>=0;top--)
+        printf("%d  ",arr2[top]);
+    top=tos2;
+}
+void print1(int* arr1)
+{
+    int i;
+    for(i=0;i<=tos1;i++)
+        printf("%d  ",arr1[i]);
+    i=0;
+}
+void printQ(int* arr1,int* arr2)
+{
+    if(!isEmptyQ())
+    {
+        print2(arr2);
+        print1(arr1);
+    }
+    else
+        printf("Queue is Empty");
+}
+int main()
+{
+    tos1=-1;
+    tos2=-1;
+    int n,a;
+    int arr1[50];
+    int arr2[50];
+    while(1){
+
+    printf("\nEnter 1 to insert, 2 to delete, 3 to print and 4 to exit\n");
+    scanf("%d",&n);
+    switch(n)
+    {
+        case 1:
+        if(isFullQ())
+            printf("Overflow");
+        else{
+        printf("\nEnter a number to insert\n");
+        scanf("%d",&a);
+        Enqueue(arr1,a);
+        }
+        break;
+
+        case 2:
+        Dequeue(arr1,arr2);
+        break;
+
+        case 3:
+        printQ(arr1,arr2);
+        break;
+
+        case 4:
+        exit(1);
+        break;
+
+        default:
+        printf("Wrong Choice");
+    }
+}
+}
