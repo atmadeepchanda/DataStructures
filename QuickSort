@@ -1,0 +1,68 @@
+//QuickSort
+//Here the user gets to choose the value of pivot during every recursive call
+//If required then the code can be modified to assign a specific value to the pivot
+
+#include<stdio.h>
+#include<stdlib.h>
+
+int partition(int* arr,int l,int u)
+{
+    int temp;
+    int n;
+    printf("\nEnter the value of pivot between %d and %d\n",l,u);
+    scanf("%d",&n);
+    int pivot=arr[n];
+    int i;
+    int j=l;
+    for(i=l;i<=u;i++)
+    {
+        if(arr[i]<pivot)
+        {
+            temp=arr[j];
+            arr[j]=arr[i];
+            arr[i]=temp;
+            j++;
+            if(arr[i]==pivot)
+                n=i;
+        }
+    }
+    temp=arr[j];
+    arr[j]=arr[n];
+    arr[n]=temp;
+    return j;
+}
+
+void quickSort(int* arr, int l,int u)
+{
+    int p;
+    if(l<u)
+    {
+        p=partition(arr,l,u);
+        quickSort(arr,l,p-1);
+        quickSort(arr,p+1,u);
+
+    }
+}
+
+int main()
+{
+    int n,i,l,u;
+    printf("\nEnter the size of array\n");
+    scanf("%d",&n);
+    int* arr=(int*)malloc(n*sizeof(int));
+    printf("\nEnter the elements of the array\n");
+    for(i=0;i<n;i++)
+        scanf("%d",arr+i);
+    l=0;
+    u=n-1;
+    quickSort(arr,l,u);
+    printf("\nPrinting the sorted array\n");
+    for(i=0;i<n;i++)
+        printf("%d  ",arr[i]);
+    return 0;
+
+}
+
+
+
+
