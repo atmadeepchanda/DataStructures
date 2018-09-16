@@ -1,0 +1,111 @@
+// C version
+
+#include<stdio.h>
+#include<stdlib.h>
+
+void countingSort(int* arr,int l,int n)
+{
+    int i,k,j;
+    int b[n];
+    int* aux=(int*)calloc(l+1,sizeof(int));
+    for(i=0;i<n;i++)
+    {
+        j=arr[i];
+        aux[j]+=1;
+    }
+    for(i=1;i<l+1;i++)
+        aux[i]+=aux[i-1];
+    j=0;
+    for(i=n-1;i>=0;i--)
+    {
+        j=arr[i];
+        k=aux[j];
+        b[k-1]=j;
+        aux[j]-=1;
+    }
+    printf("\nThe array after sorting is\n");
+    for(i=0;i<n;i++)
+        printf("%d  ",b[i]);
+}
+
+
+
+
+
+
+
+void main()
+{
+    int n,i,largest=0;
+    printf("\nEnter the size of the array\n");
+    scanf("%d",&n);
+    int* arr=(int*)malloc(n*sizeof(int));
+    printf("\nEnter the elements of the array in the range 0 to %d\n",n);
+    printf("\nWarning!Enter no negative numbers\n");
+    for(i=0;i<n;i++)
+    {
+        scanf("%d",arr+i);
+        if(arr[i]>largest)
+            largest=arr[i];
+
+    }
+    countingSort(arr,largest,n);
+
+
+}
+
+
+
+//Java version
+
+
+import java.util.*;
+public class Csort
+{
+   
+    void countingSort(int arr[],int l,int n)
+    {
+    int i,k,j;
+    int b[]=new int[n];
+    int aux[]=new int[l+1];
+    for(i=0;i<n;i++)
+    {
+        j=arr[i];
+        aux[j]+=1;
+    }
+    for(i=1;i<l+1;i++)
+        aux[i]+=aux[i-1];
+    j=0;
+    for(i=n-1;i>=0;i--)
+    {
+        j=arr[i];
+        k=aux[j];
+        b[k-1]=j;
+        aux[j]-=1;
+    }
+    System.out.printf("\nThe array after sorting is\n");
+    for(i=0;i<n;i++)
+        System.out.printf("%d  ",b[i]);
+}
+public static void main(String[] args)
+{
+    Scanner sc = new Scanner(System.in);
+    int n,i,largest=0;
+    System.out.printf("\nEnter the size of the array\n");
+    n=sc.nextInt();
+    int arr[]=new int[n];
+    System.out.printf("\nEnter the elements of the array\n");
+    System.out.printf("\nWarning!Enter no negative numbers\n");
+    for(i=0;i<n;i++)
+    {
+        arr[i]=sc.nextInt();
+        if(arr[i]>largest)
+            largest=arr[i];
+
+    }
+    Csort obj = new Csort();
+    obj.countingSort(arr,largest,n);
+
+
+}
+}
