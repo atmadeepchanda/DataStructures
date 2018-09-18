@@ -1,0 +1,55 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+void radixSort(int* arr,int l,int n,int r)//Here we use the same function of counting sort with just a few modifications
+{
+    int i,k,j;
+    int b[n];
+    int* aux=(int*)calloc(l,sizeof(int));
+    for(i=0;i<n;i++)
+    {
+        j=arr[i];
+        aux[(j/r)%10]+=1;
+    }
+    for(i=1;i<l;i++)
+        aux[i]+=aux[i-1];
+    j=0;
+    for(i=n-1;i>=0;i--)
+    {
+        j=arr[i];
+        k=aux[(j/r)%10];
+        b[k-1]=j;
+        aux[(j/r)%10]-=1;
+    }
+
+    for(i=0;i<n;i++)
+        printf("%d  ",b[i]);
+        printf("\n");
+    for(i=0;i<n;i++)
+        arr[i]=b[i];
+}
+
+void main()
+{
+    int n,i,r,b,largest=0;
+    printf("\nEnter the size of the array\n");
+    scanf("%d",&n);
+    int* arr=(int*)malloc(n*sizeof(int));
+    printf("\nEnter the elements of the array\n");
+    printf("\nWarning!Enter no negative numbers\n");
+    for(i=0;i<n;i++)
+    {
+        scanf("%d",arr+i);
+        if(arr[i]>largest)
+            largest=arr[i];
+
+    }
+    printf("\nEnter the base/radix of the numbers\n");
+    scanf("%d",&b);
+    for(r=1;(largest/r)>0;r*=10)
+        radixSort(arr,b,n,r);
+    printf("\nThe sorted array is\n ");
+    for(i=0;i<n;i++)
+        printf("%d  ",arr[i]);
+}
+
