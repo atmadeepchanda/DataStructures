@@ -1,4 +1,4 @@
-QUEUE USING 2 STACKS
+//QUEUE USING 2 STACKS
 
 
 #include<stdio.h>
