@@ -35,12 +35,13 @@ void maxHeap(int* arr,int n)
 void heapSort(int* arr,int n)
 {
     int i,temp;
-    for(i=0;i<n-1;i++)
+    maxHeap(arr,n);
+    for(i=n-1;i>0;i--)
     {
-        maxHeap(arr,n-i);
         temp=arr[0];
-        arr[0]=arr[n-1-i];
-        arr[n-1-i]=temp;
+        arr[0]=arr[i];
+        arr[i]=temp;
+        maxHeapify(arr,0,i);
     }
 }
 
