@@ -1,0 +1,115 @@
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+int stack[500];
+int tos;
+
+int isEmpty()
+{
+    return tos==-1;
+}
+
+int isFull()
+{
+    return tos==499;
+}
+
+void push(int n)
+{
+    if(!isFull())
+        stack[++tos]=n;
+}
+
+void pop()
+{
+    if(!isEmpty())
+         stack[tos--];
+}
+
+
+
+void createGraph(int adj[500][500],int size)
+{
+    int i,s,e;
+    printf("\nEnter the edges of the graph\n");
+    printf("\nEnter -1 -1 to quit\n");
+    for(i=1;i<=(size*(size-1));i++) //Use size*(size-1)/2 for undirected graphs
+    {
+        scanf("%d %d",&s,&e);
+        if((s==-1)&&(e==-1))
+           break;
+        printf("\n");
+        adj[s][e]=1;
+        //adj[e][s]=1;  Remove the backslashes and this comment for undirected graphs
+    }
+}
+
+
+
+void DFS(int adj[500][500],int* visited,int p)
+{
+    int n,i,f,t;
+
+    printf("\nEnter starting vertex\n");
+    scanf("%d",&n);
+    visited[n]=1;
+    push(n);
+    f=n;
+    printf("%d ",f);
+    while(!isEmpty())
+    {
+        t=stack[tos];
+
+        for(i=0;i<p;i++)
+        {
+            if((adj[f][i])&&(!visited[i]))
+            {
+                push(i);
+                visited[i]=1;
+                f=i;
+                printf("%d ",f);
+                break;
+            }
+        }
+        if(t==stack[tos])
+        {
+           pop();
+           f=stack[tos];
+        }
+
+
+
+    }
+}
+
+
+int main()
+{
+    tos=-1;
+    int n;
+    printf("\nEnter the no of vertices\n");
+    scanf("%d",&n);
+    int adj[500][500]={0};
+    int visited[500]={0};
+    createGraph(adj,n);
+    DFS(adj,visited,n);
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
