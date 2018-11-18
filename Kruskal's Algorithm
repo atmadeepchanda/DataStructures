@@ -98,7 +98,7 @@ void kruskal(int karray[500][500],Edge* arr,int* Union,int vertices)    //ignore
     int i,n;
     printf("%d  %d  %d  ",arr[0].start,arr[0].weight,arr[0].end);
     n=formUnion(Union,arr[0].start,arr[0].end);
-    for(i=1;i<vertices;i++)
+    for(i=1;i<top;i++)
     {
         if(c==vertices-1)
             break;
