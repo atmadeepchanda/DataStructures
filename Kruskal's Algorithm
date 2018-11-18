@@ -1,0 +1,161 @@
+//Here i have used the union-find method involving disjoint sets
+
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+#define INFINITY 9999
+
+int top=0;
+typedef struct array
+{
+    int start;
+    int end;
+    int weight;
+}Edge;
+
+void insertionSort(Edge* arr/*int* top*/)
+{
+
+    int i;
+
+    int j,k;
+    int temp,temp1,temp2;
+    for(j=1;j<top;j++){
+    k=j;
+    while((k>=1)&&(arr[k].weight<arr[k-1].weight))
+    {
+        temp=arr[k].weight;
+        arr[k].weight=arr[k-1].weight;
+        arr[k-1].weight=temp;
+
+        temp1=arr[k].start;
+        arr[k].start=arr[k-1].start;
+        arr[k-1].start=temp1;
+
+        temp2=arr[k].end;
+        arr[k].end=arr[k-1].end;
+        arr[k-1].end=temp2;
+
+        k--;
+
+    }
+    }
+
+}
+
+void createGraph(int adj[500][500],int size,Edge* arr)
+{
+    int i,s,e,w;
+    printf("\nEnter the edges and weights of the graph\n");
+    printf("\nEnter -1 -1 to quit\n");
+    for(i=1;i<=(size*(size-1));i++)
+    {
+        scanf("%d %d %d",&s,&e,&w);
+        if((s==-1)&&(e==-1))
+           break;
+        printf("\n");
+        adj[s][e]=w;
+
+    }
+}
+
+
+
+int findParent(int* Union,int v)
+{
+    if(Union[v]==-1)
+        return v;
+    else
+        return findParent(Union,Union[v]);
+}
+int checkCycle(int* Union,int s,int e)
+{
+    int x=findParent(Union,s);
+    int y=findParent(Union,e);
+    if(x!=y)
+        return 1;       //No Cycle
+    if((x==y)&&(x==-1))
+       return 1;        //No Cycle
+
+    return 0;           //Cycle will form
+}
+int formUnion(int* Union,int s,int e)
+{
+    if(checkCycle(Union,s,e))
+    {
+        Union[s]=e;
+        return 1;
+    }
+    return 0;
+}
+
+void kruskal(int karray[500][500],Edge* arr,int* Union,int vertices)    //ignore the karray part.
+{
+    int c=0;
+    printf("\nPrinting the minimal cost spanning tree by Kruskal's algo\n");
+    int i,n;
+    printf("%d  %d  %d  ",arr[0].start,arr[0].weight,arr[0].end);
+    n=formUnion(Union,arr[0].start,arr[0].end);
+    for(i=1;i<vertices;i++)
+    {
+        if(c==vertices-1)
+            break;
+        if(formUnion(Union,arr[i].start,arr[i].end))
+        {
+            printf("%d  %d  %d  ",arr[i].start,arr[i].weight,arr[i].end);
+            karray[arr[i].start][arr[i].end]=arr[i].weight;
+            c++;
+
+        }
+    }
+
+}
+
+void createEdgeList(int adj[500][500],Edge* arr,int n)
+{
+    int i,j;
+    for(i=0;i<n;i++)
+    {
+        for(j=0;j<n;j++)
+        {
+            if(adj[i][j]){     // Use if(adj[i][j])!=INFINITY if there is an edge with weight 0
+                arr[top].start=i;
+                arr[top].end=j;
+                arr[top].weight=adj[i][j];
+                top++;
+            }
+        }
+    }
+
+
+}
+
+int main()
+{
+    Edge arr[500];
+    int adj[500][500];
+    int karray[500][500];
+    int n;
+    printf("\nEnter the number of vertices\n");
+    scanf("%d",&n);
+    int Union[n];
+    int i,j;
+    for(i=0;i<n;i++)
+        Union[i]=-1;
+    /*for(i=0;i<n;i++)          //Use the comment if there is an edge with weight 0
+    {
+        for(j=0;j<n;j++)
+            adj[i][j]=INFINITY;
+    }
+    */
+    createGraph(adj,n,arr);
+    createEdgeList(adj,arr,n);
+    insertionSort(arr);
+    kruskal(karray,arr,Union,n);
+
+
+}
+
+
