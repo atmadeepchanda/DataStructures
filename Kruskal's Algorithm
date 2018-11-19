@@ -56,10 +56,10 @@ void createGraph(int adj[500][500],int size,Edge* arr)
         if((s==-1)&&(e==-1))
            break;
         printf("\n");
-        if(s<e)
+        //if(s<e)                  // these few commented lines are not necessary
             adj[s][e]=w;
-        else
-            adj[e][s]=w;
+        //else
+          //  adj[e][s]=w;
 
     }
 }
