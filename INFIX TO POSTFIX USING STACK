@@ -80,6 +80,8 @@ else if((priority(inf[i])<priority(arr[tos]))||((priority(inf[i])==priority(arr[
 {
 while((priority(inf[i])<=priority(arr[tos]))&&(tos!=-1))
 {
+if((priority(inf[i])==priority(arr[tos]))&&((asso(inf[i])==0)&&(asso(arr[tos])==0)))
+        break;
 c=pop(arr);
 char s[] ={c,'\0'};
 strcat(p,s);
