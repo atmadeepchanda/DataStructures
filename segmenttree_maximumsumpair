@@ -1,0 +1,104 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class node{
+    public:
+        int maximum;
+        int smaximum;
+        
+};
+
+node query(node* tree,int treeNode,int start,int end,int left,int right){
+    
+    
+     if(start>right || end<left){
+        node n;
+        n.maximum=INT_MIN;
+        n.smaximum=INT_MIN;
+        return n;
+    }
+    
+    if(start>=left && end<=right){
+        return tree[treeNode];
+    }
+    node n;
+    int mid=(start+end)/2;
+    node l=query(tree,2*treeNode,start,mid,left,right);
+    node r=query(tree,2*treeNode+1,mid+1,end,left,right);
+    n.maximum=max(l.maximum,r.maximum);
+    n.smaximum=min(max(l.maximum,r.smaximum),max(l.smaximum,r.maximum));
+    return n;
+}
+
+void update(int* arr,node* tree,int treeNode,int start,int end,int index,int value){
+    
+    if(start==end){
+        arr[start]=value;
+        tree[treeNode].maximum=value;
+        tree[treeNode].smaximum=INT_MIN;
+        return;
+    }
+    
+    int mid=(start+end)/2;
+    if(index>mid){
+        update(arr,tree,2*treeNode+1,mid+1,end,index,value);
+    }
+    else{
+        update(arr,tree,2*treeNode,start,mid,index,value);
+    }
+    
+    node left=tree[2*treeNode];
+    node right=tree[2*treeNode+1];
+    tree[treeNode].maximum=max(left.maximum,right.maximum);
+    tree[treeNode].smaximum=min(max(left.maximum,right.smaximum),max(left.smaximum,right.maximum));
+    
+}
+
+void buildTree(int* arr,node* tree,int treeNode,int start,int end){
+    
+    if(start==end){
+        tree[treeNode].maximum=arr[start];
+        tree[treeNode].smaximum=INT_MIN;
+        return;
+    }
+    
+    int mid=(start+end)/2;
+    buildTree(arr,tree,2*treeNode,start,mid);
+    buildTree(arr,tree,2*treeNode+1,mid+1,end);
+    node left=tree[2*treeNode];
+    node right=tree[2*treeNode+1];
+    tree[treeNode].maximum=max(left.maximum,right.maximum);
+    tree[treeNode].smaximum=min(max(right.maximum,left.smaximum),max(left.maximum,right.smaximum));
+    
+}
+
+int main(){
+    int n,q;
+    cin>>n;
+    int* arr=new int[n];
+    for(int i=0;i<n;i++){
+        cin>>arr[i];
+    }
+    
+    
+    node* tree=new node[4*n];
+    buildTree(arr,tree,1,0,n-1);
+    cin>>q;
+    int x,y;
+    char c;
+    while(q--){
+        cin>>c>>x>>y;
+        if(c=='Q'){
+            node nod=query(tree,1,0,n-1,x-1,y-1);
+            cout<<nod.maximum+nod.smaximum<<endl;
+            
+        }
+        else{
+            update(arr,tree,1,0,n-1,x-1,y);
+            
+            
+        }
+    }
+    
+}
+    
