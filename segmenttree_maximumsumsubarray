@@ -1,0 +1,121 @@
+#include<bits/stdc++.h>
+using namespace std;
+class node{
+  public:
+    
+    int maxsum;
+    int sum;
+    int prefixsum;
+    int suffixsum;
+    
+};
+
+void buildTree(int *arr,node *tree,int start,int end,int treenumber){
+    
+    if(start==end){
+        
+        tree[treenumber].maxsum=arr[start];
+        tree[treenumber].sum=arr[start];
+        tree[treenumber].prefixsum=arr[start];
+        tree[treenumber].suffixsum=arr[start];
+        return;
+        
+    }
+    
+    int mid = (start+end)/2;
+    
+    buildTree(arr,tree,start,mid,2*treenumber);
+    buildTree(arr,tree,mid+1,end,2*treenumber+1);
+    
+    node left = tree[2*treenumber];
+    node right = tree[2*treenumber+1];
+    
+    tree[treenumber].sum = left.sum+right.sum;
+    tree[treenumber].prefixsum = max(left.sum+right.prefixsum,left.prefixsum);
+    tree[treenumber].suffixsum = max(right.sum+left.suffixsum,right.suffixsum);
+    int option1 = left.maxsum;
+    int option2 = right.maxsum;
+    int option3 = left.sum+right.prefixsum;
+    int option4 = left.suffixsum+right.sum;
+    int option5 = left.suffixsum+right.prefixsum;
+    tree[treenumber].maxsum = max(option1,max(option2,max(option3,max(option4,option5))));
+    
+    
+}
+
+
+
+node query(node *tree,int start,int end,int treenumber,int lefts,int rights){
+    
+    //completly outside
+    
+    
+    if(lefts>end || start>rights){
+         
+       node n;
+       n.sum=-1000000;
+       n.prefixsum= -1000000;
+       n.suffixsum =-1000000;
+       n.maxsum =-1000000 ;
+        return n;
+    }
+    
+    //completly inside
+    
+    if(lefts<=start && rights>=end){
+        
+        return tree[treenumber];
+    }
+    //partially inside;
+    int mid = (start+end)/2;
+    
+    node left = query(tree,start,mid,2*treenumber,lefts,rights);
+    node right = query(tree,mid+1,end,2*treenumber+1,lefts,rights);
+    
+    node n;
+    
+    n.sum = left.sum+right.sum;
+    n.prefixsum = max(left.sum+right.prefixsum,left.prefixsum);
+    n.suffixsum = max(right.sum+left.suffixsum,right.suffixsum);
+    int option1 = left.maxsum;
+    int option2 = right.maxsum;
+    int option3 = left.sum+right.prefixsum;
+    int option4 = left.suffixsum+right.sum;
+    int option5 = left.suffixsum+right.prefixsum;
+    n.maxsum    = max(option1,max(option2,max(option3,max(option4,option5))));
+
+    
+    return n;
+    
+}
+
+
+int main() {
+    
+    int n;
+    cin>>n;
+    
+    int *arr = new int[n];
+    
+    for(int i=0;i<n;i++)
+        cin>>arr[i];
+    
+    node *tree = new node[4*n];
+    
+    buildTree(arr,tree,0,n-1,1);
+    
+   // update(arr,tree,0,n-1,1,0,0);
+    
+    // for(int i=0;i<4*n;i++){
+    //     cout<<tree[i]<<endl;
+    // }
+    
+    int m;
+    cin>>m;
+    for(int i=0;i<m;i++){
+        int x,y;
+        cin>>x>>y;
+        cout<<query(tree,0,n-1,1,x-1,y-1).maxsum<<endl;
+    }
+    
+}
