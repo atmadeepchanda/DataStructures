@@ -1,0 +1,90 @@
+#include <iostream>
+#include <bits/stdc++.h>
+#define INF INT_MAX
+using namespace std;
+
+void prims(int** graph,int V,int E){
+   
+    int c=0;
+    int* visited=new int[V];
+    for(int i=0;i<V;i++){
+        visited[i]=0;
+    }
+    int* parent=new int[V];
+    int* weight=new int[V];
+    
+    for(int i=0;i<V;i++){
+        weight[i]=INF;    
+    }
+    weight[0]=0;
+    parent[0]=-1;
+    //visited[0]=1;
+    
+    while(c<V){
+    int min=INT_MAX;
+    int index=-1;
+    for(int i=0;i<V;i++){
+        if(!visited[i]){
+            if(min>weight[i]){
+                min=weight[i];
+                index=i;
+            }
+        }
+    }
+    visited[index]=1;
+    c++;    
+    for(int k=0;k<V;k++){
+        if(graph[index][k] && !visited[k]){
+            int w=graph[index][k];
+            if(w<weight[k]){
+                weight[k]=w;
+                parent[k]=index;
+            }
+        }
+    }
+    }
+    for(int j=1;j<V;j++){
+        
+        int l=min(j,parent[j]);
+        int r=max(j,parent[j]);
+        cout<<l<<" "<<r<<" "<<weight[j]<<endl;
+        
+        
+    }
+    
+    
+}
+
+int main()
+{
+  int V, E, tempX, tempY, weight;
+  cin >> V >> E;
+
+  /*
+
+  	   Write Your Code Here
+	   Complete the Rest of the Program
+	   You have to Print the output yourself
+	 
+  */
+    
+    int** graph=new int*[V];
+    
+    for(int i=0;i<V;i++){
+        graph[i]=new int[V];
+    }
+    
+    for(int i=0;i<E;i++){
+        cin>>tempX>>tempY>>weight;
+        graph[tempX][tempY]=weight;
+        graph[tempY][tempX]=weight;
+    }
+    
+   
+    
+    prims(graph,V,E);
+    
+    
+
+  return 0;
+}
