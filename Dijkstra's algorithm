@@ -1,0 +1,83 @@
+#include <iostream>
+#include <bits/stdc++.h>
+
+#define INF INT_MAX
+
+using namespace std;
+
+void dijkstra(int** graph,int V,int E){
+    
+    int count=0;
+    int* visited=new int[V];
+    for(int i=0;i<V;i++){
+        visited[i]=0;
+    }
+    
+    int* weight=new int[V];
+    for(int i=0;i<V;i++){
+        weight[i]=INF;
+    }
+    
+    weight[0]=0;
+    while(count<V){
+        
+        int min=INF;
+        int index=-1;
+        for(int i=0;i<V;i++){
+            if(weight[i]<min && !visited[i]){
+                min=weight[i];
+                index=i;
+            }
+        }
+        
+        visited[index]=1;
+        count++;
+        
+        for(int i=0;i<V;i++){
+            if(graph[index][i] && !visited[i]){
+                int newWeight=weight[index]+graph[index][i];
+                if(newWeight<weight[i]){
+                    weight[i]=newWeight;
+                }
+            }
+        }
+    }
+    
+    for(int i=0;i<V;i++){
+        
+        cout<<i<<" "<<weight[i]<<endl;
+    }
+    
+    
+    
+    
+    
+}
+
+int main()
+{
+  int V, E, tempX, tempY, weight;
+  cin >> V >> E;
+
+  /*
+
+  	   Write Your Code Here
+	   Complete the Rest of the Program
+	   You have to Print the output yourself
+	 
+  */
+    int** graph=new int*[V];
+    for(int i=0;i<V;i++){
+        graph[i]=new int[V];
+    }
+    
+    for(int i=0;i<E;i++){
+        cin>>tempX>>tempY>>weight;
+        graph[tempX][tempY]=weight;
+        graph[tempY][tempX]=weight;
+    }
+    
+    dijkstra(graph,V,E);
+
+  return 0;
+}
