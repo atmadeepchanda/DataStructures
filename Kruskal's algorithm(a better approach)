@@ -1,4 +1,6 @@
-#include <iostream>
+//Approach 1
+
+#include <iostream>			//Using union find
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -12,12 +14,7 @@ class Edge{
 };
 
 void setParent(int i,int key,int* parent){
-    if(i==parent[i]){
         parent[i]=key;
-        return;
-    }
-    
-    setParent(parent[i],key,parent);
 }
 
 int findParent(int i,int* parent){
@@ -62,7 +59,107 @@ int main()
             int left=findParent(arr[i].src,parent);
             int right=findParent(arr[i].dest,parent);
             if(left!=right){
-                setParent(arr[i].dest,left,parent);
+                setParent(right,left,parent);
+                count++;
+                int p=min(arr[i].src,arr[i].dest);
+                int q=max(arr[i].src,arr[i].dest);
+                cout<<p<<" "<<q<<" "<<arr[i].weight<<endl;
+            }
+        }
+    }
+    
+    
+    
+    
+    
+
+  return 0;
+}
+
+
+
+
+//Approach 2
+
+#include <iostream>		//Using union find by rank and path compression
+#include <bits/stdc++.h>
+using namespace std;
+
+
+
+class Edge{
+    public:
+        int src;
+        int dest;
+        int weight;
+};
+
+
+int collapsingFind(int i,int* parent){
+    
+    int r=i;
+    while(parent[r]>0){
+        r=parent[r];
+    }
+    
+    int p=r;
+    while(i!=r){
+        int temp=parent[i];
+        parent[i]=r;
+        i=temp;
+    }
+    return p;
+}
+void setParent(int* parent,int i,int key){
+        parent[key]+=parent[i];
+        parent[i]=key;
+      
+}
+
+
+
+bool compareSrc(Edge e1,Edge e2){
+    return (e1.weight<e2.weight);
+}
+
+
+int main()
+{
+  int V, E, tempX, tempY;
+  cin >> V >> E;
+
+  /*
+
+  	   Write Your Code Here
+	   Complete the Rest of the Program
+	   You have to Print the output yourself
+	 
+  */
+    Edge* arr=new Edge[E];
+    int count=0;
+    for(int i=0;i<E;i++){
+        cin>>arr[i].src>>arr[i].dest>>arr[i].weight;
+    }
+    
+    sort(arr,arr+E,compareSrc);
+    int* parent=new int[V];
+    for(int i=0;i<V;i++){
+        parent[i]=-1;
+    }
+    
+    while(count<V-1){                //Here we use union by rank and path compression
+        for(int i=0;i<E;i++){
+            int left=collapsingFind(arr[i].src,parent);
+            int right=collapsingFind(arr[i].dest,parent);
+            if(left!=right){
+                int newParent=(parent[left]<=parent[right])?left:right;
+                if(newParent==left){
+                    setParent(parent,right,left);
+                }
+                else{
+                    setParent(parent,left,right);
+                }
+                
                 count++;
                 int p=min(arr[i].src,arr[i].dest);
                 int q=max(arr[i].src,arr[i].dest);
