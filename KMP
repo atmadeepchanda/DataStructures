@@ -1,0 +1,62 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+long* getlps(char T[]){
+    
+    long i=1;
+    long j=0;
+    long* arr=new long[strlen(T)];
+    arr[0]=0;
+    //while(T[i]!='\0'){
+    while(i<strlen(T)){
+        if(T[i]==T[j]){
+            arr[i]=j+1;
+            i++;
+            j++;
+        }
+        else{
+            if(j!=0){
+                j=arr[j-1];
+            }
+            else{
+                arr[i]=0;
+                i++;
+            }
+        }
+    }
+    return arr;
+    
+}
+long findString(char S[], char T[]) {
+    // Write your code here
+    long* lps=getlps(T);
+    long i=0;
+    long j=0;
+    long index=-1;
+   //hile((S[i]!='\0')&&(T[j]!='\0')){
+    while(i<strlen(S) && j<strlen(T)){
+        if(S[i]==T[j]){
+            //if(T[j+1]=='\0'){
+                index=i;
+            //}
+            i++;
+            j++;
+            
+        }
+        else{
+            if(j>0){
+                j=lps[j-1];
+            }
+            else{
+                i++;
+            }
+        }
+    }
+    if(j==strlen(T)){
+        return (index-j+1);
+    }
+    else{
+        return -1;
+    }
+
+}
