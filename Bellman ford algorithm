@@ -20,13 +20,21 @@ int bellmanFord(Edge* arr,int e,int v){
     }
     dist[0]=0;
     int* pred=new int[v];
+    int flag=0;
 
-    for(int i=1;i<=v-1;i++){
+    for(int j=1;j<=v-1;j++){
         for(int i=0;i<e;i++){
             if(dist[arr[i].src]+arr[i].weight<dist[arr[i].dest]){
+                flag=1;
                 dist[arr[i].dest]=dist[arr[i].src]+arr[i].weight;
                 pred[arr[i].dest]=arr[i].src;
             }
+        }
+        if(!flag){
+            break;
+        }
+        else{
+            flag=0;
         }
     }
     
