@@ -1,0 +1,89 @@
+#include<bits/stdc++.h>
+using namespace std ;
+
+int blockSize;
+class Query{
+  	public:
+    int l,r,index;
+};
+
+bool compare(Query a,Query b){
+    if(a.l/blockSize==b.l/blockSize){
+        return a.r<b.r;
+    }
+    return ((a.l/blockSize)<(b.l/blockSize));
+}
+
+
+int main(){
+    int n,q;
+    cin>>n;
+    blockSize=(int)sqrt(n);
+    int* arr=new int[n];
+    for(int i=0;i<n;i++){
+        cin>>arr[i];
+    }
+    cin>>q;
+    Query* query=new Query[q];
+    for(int i=0;i<q;i++){
+        int x,y;
+        cin>>x>>y;
+        query[i].l=x-1;
+        query[i].r=y-1;
+        query[i].index=i;
+    }
+    
+    int* ans=new int[q];
+    int* freq=new int[1000001]();
+    sort(query,query+q,compare);
+    int left=query[0].l,right=query[0].l;
+    freq[arr[left]]++;
+    int count=1;
+    for(int i=0;i<q;i++){
+        
+        while(left<query[i].l){
+            freq[arr[left]]--;
+            if(freq[arr[left]]==0){
+                count--;
+            }
+            left++;
+        }
+        
+        
+        while(left>query[i].l){
+            left--;
+            freq[arr[left]]++;
+            if(freq[arr[left]]==1){
+                count++;
+            }
+            
+        }
+        
+         while(right<query[i].r){
+            right++;
+            freq[arr[right]]++;
+            if(freq[arr[right]]==1){
+                count++;
+            }
+            
+        }
+        
+        while(right>query[i].r){
+            freq[arr[right]]--;
+            if(freq[arr[right]]==0){
+                count--;
+            }
+            right--;
+        }
+        
+        ans[query[i].index]=count;
+    }
+    
+    for(int i=0;i<q;i++){
+        cout<<ans[i]<<endl;
+    }
+}
+    
+    
+    
+    
