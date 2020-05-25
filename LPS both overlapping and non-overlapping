@@ -1,0 +1,82 @@
+//overlapping
+long long* getlps(string pattern){
+    long long len=pattern.length();
+    long long* lps=new long long[len]();
+    long long i=1;
+    long long j=0;
+    while(i<len){
+        if(pattern[i]==pattern[j]){
+            lps[i]=j+1;
+            i++;
+            j++;
+        }
+        else{
+            if(j!=0){
+                j=lps[j-1];
+            }
+            else{
+                lps[i]=0;
+                i++;
+            }
+        }
+    }
+    return lps;
+}
+
+//Non overlapping
+
+long long* getlps(string pattern){
+    long long len=pattern.length();
+    long long* lps=new long long[len]();
+    long long i=1;
+    long long j=0;
+    while(i<len){
+        if(pattern[i]==pattern[j]){
+            lps[i]=j+1;
+            i++;
+            j++;
+        }
+        else{
+            if(j!=0){
+                j=lps[j-1];
+            }
+            else{
+                lps[i]=0;
+                i++;
+            }
+        }
+    }
+    return lps;
+}
+
+
+long long* getlps2(string pattern,long long* lps1){
+    long long len=pattern.length();
+    long long* lps2=new long long[len]();
+    long long i=1;
+    long long j=0;
+    while(i<len){
+        if(pattern[i]==pattern[j]){
+            j++;
+            if(2*j>i+1){
+                j=lps1[j-1];
+            }
+            lps2[i]=j;
+            i++;
+        }
+        else{
+            if(j!=0){
+                j=lps1[j-1];
+            }
+            else{
+                lps2[i]=0;
+                i++;
+            }
+        }
+    }
+    return lps2;
+}
+
+
+//for an example problem, refer to  https://www.codechef.com/problems/CHEFSHIP
+
