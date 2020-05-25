@@ -1,0 +1,89 @@
+#include<bits/stdc++.h>
+using namespace std ;
+
+long long blockSize;
+class Query{
+public:
+    long long l,r,index;
+};
+
+bool compare(Query a,Query b){
+    if(a.l/blockSize==b.l/blockSize){
+        return a.r<b.r;
+    }
+    return ((a.l/blockSize)<(b.l/blockSize));
+}
+
+
+int main(){
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    long long n,q;
+    cin>>n>>q;
+    blockSize=(long long)sqrt(n);
+    long long* arr=new long long[n];
+    for(long long i=0;i<n;i++){
+        cin>>arr[i];
+    }
+    Query* query=new Query[q];
+    for(long long i=0;i<q;i++){
+        long long x,y;
+        cin>>x>>y;
+        query[i].l=x-1;
+        query[i].r=y-1;
+        query[i].index=i;
+    }
+
+    long long* ans=new long long[q];
+    long long* freq=new long long[1000001]();
+    sort(query,query+q,compare);
+    long long left=query[0].l,right=query[0].l;
+    freq[arr[left]]++;
+    long long power=arr[left];
+    for(long long i=0;i<q;i++){
+        while(left<query[i].l){
+            freq[arr[left]]--;
+            long long currFreq=freq[arr[left]];
+            long long prevFreq=freq[arr[left]]+1;
+            power=power-(arr[left]*prevFreq*prevFreq);
+            power=power+(arr[left]*currFreq*currFreq);
+            left++;
+        }
+
+
+        while(left>query[i].l){
+            left--;
+            freq[arr[left]]++;
+            long long currFreq=freq[arr[left]];
+            long long prevFreq=freq[arr[left]]-1;
+            power=power-(arr[left]*prevFreq*prevFreq);
+            power=power+(arr[left]*currFreq*currFreq);
+        }
+
+        while(right<query[i].r){
+            right++;
+            freq[arr[right]]++;
+            long long currFreq=freq[arr[right]];
+            long long prevFreq=freq[arr[right]]-1;
+            power=power-(arr[right]*prevFreq*prevFreq);
+            power=power+(arr[right]*currFreq*currFreq);
+        }
+
+        while(right>query[i].r){
+            freq[arr[right]]--;
+            long long currFreq=freq[arr[right]];
+            long long prevFreq=freq[arr[right]]+1;
+            power=power-(arr[right]*prevFreq*prevFreq);
+            power=power+(arr[right]*currFreq*currFreq);
+            right--;
+        }
+
+        ans[query[i].index]=power;
+    }
+
+    for(long long i=0;i<q;i++){
+        cout<<ans[i]<<"\n";
+    }
+}
+ 
