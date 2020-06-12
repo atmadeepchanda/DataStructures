@@ -1,0 +1,243 @@
+#include<bits/stdc++.h>
+#define mod 1000000007
+#define pb push_back
+#define ff first
+#define ss second
+#define ii pair<int,int>
+#define vi vector<int>
+#define vii vector<ii>
+#define lli long long int
+#define INF 1000000000
+#define endl "\n"
+const double PI = 3.141592653589793238460;
+typedef std::complex<double> Complex;
+typedef std::valarray<Complex> CArray;
+
+using namespace std;
+const int maxN = 15;
+const int BLK = 400;
+
+vector<int> ar[40001];
+long long freq=0;
+int nodeF[40001]={0}, level[40001];
+long long eleF[100001]={0};
+unordered_map<long long,long long> indmap;
+int LCA[40001][maxN] ;
+long long val[40001];
+long long res[100001];
+
+int S[40001] , T[40001] , ft[80002];
+int timer;
+
+struct query{
+    int l;
+    int r;
+    int idx;
+    int lca;
+};
+
+query Q[100001];
+
+void dfs(int node , int par , int lvl)
+{
+    level[node] = lvl;
+    LCA[node][0] = par;
+
+    S[node] = timer;
+    ft[timer] = node;
+    timer++;
+
+    for(int child : ar[node])
+        if(child != par)
+            dfs(child , node , lvl+1);
+
+    T[node] = timer;
+    ft[timer] = node;
+    timer++;
+}
+
+
+void init(int n)
+{
+    for(int j=1;j<maxN;j++)
+    {
+        for(int i=1;i<=n;i++)
+            if(LCA[i][j-1] != -1)
+            {
+                LCA[i][j] = LCA[LCA[i][j-1]][j-1];
+            }
+    }
+}
+
+int getLCA(int a , int b)
+{
+    if(level[a] > level[b])
+        swap(a , b);
+
+    int d = level[b] - level[a];
+
+    int f = 0;
+
+    while(d)
+    {
+        if(d & 1)
+            b = LCA[b][f];
+
+        d >>= 1;
+        f++;
+    }
+
+    if(a == b)
+        return a;
+
+    for(int j=maxN-1;j>=0;j--)
+        if(LCA[a][j] != -1 && (LCA[a][j] != LCA[b][j]))
+            a = LCA[a][j] , b = LCA[b][j];
+
+    return LCA[a][0];
+}
+
+bool comp(query a , query b)
+{
+    int x = a.l / BLK;
+    int y = b.l / BLK;
+
+    if(x != y) return x < y;
+    else
+        return a.r < b.r;
+}
+
+void add(int idx)
+{
+    int node = ft[idx];
+    nodeF[node]++;
+
+    if(nodeF[node] == 1)
+    {
+        int c = val[node];
+        eleF[indmap[c]]++;
+        if(eleF[indmap[c]]==1){
+            freq++;
+        }
+    }
+    else
+    {
+        int c = val[node];
+        eleF[indmap[c]]--;
+        if(eleF[indmap[c]]==0){
+            freq--;
+        }
+    }
+}
+
+void remove(int idx)
+{
+    int node = ft[idx];
+    nodeF[node]--;
+
+    if(nodeF[node] == 1)
+    {
+        int c = val[node];
+        eleF[indmap[c]]++;
+        if(eleF[indmap[c]]==1){
+            freq++;
+        }
+    }
+    else
+    {
+        int c = val[node];
+        eleF[indmap[c]]--;
+        if(eleF[indmap[c]]==0){
+            freq--;
+        }
+    }
+}
+
+int main()
+{
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    int n , q , a , b , c;
+    int t = 0;
+
+
+
+
+    cin>>n>>q;
+
+
+
+    int x=0;
+    for(int i=1;i<=n;i++){
+        cin>>val[i];
+        if(indmap.find(val[i])==indmap.end()){
+            indmap.insert(make_pair(val[i],x));
+            x++;
+        }
+    }
+
+
+    for(int i=1;i<n;i++)
+        cin>>a>>b , ar[a].push_back(b) , ar[b].push_back(a);
+
+    timer = 1;
+    memset(LCA , -1 , sizeof LCA);
+    dfs(1 , -1 , 0);
+    init(n);
+
+    for(int i=1;i<=q;i++)
+    {
+        cin>>a>>b;
+        if(S[a] > S[b])
+            swap(a , b);
+
+        int lca = getLCA(a , b);
+
+        Q[i].idx = i;
+
+        //first type of query
+        if(a == lca)
+            Q[i].l = S[a] , Q[i].r = S[b] , Q[i].lca = -1;
+
+            //second type of query
+        else
+            Q[i].l = T[a] , Q[i].r = S[b] , Q[i].lca = lca;
+    }
+
+    sort(Q+1 , Q+q+1 , comp);
+
+    int ML = 1 , MR = 0;
+
+    for(int i=1;i<=q;i++)
+    {
+        int L = Q[i].l;
+        int R = Q[i].r;
+
+        int lca = Q[i].lca;
+        int idx = Q[i].idx;
+
+        while(MR < R)
+            MR++ , add(MR);
+
+        while(ML > L)
+            ML-- , add(ML);
+
+        while(MR > R)
+            remove(MR) , MR--;
+
+        while(ML < L)
+            remove(ML) , ML++;
+
+
+        int temp=1?lca!=-1 && eleF[indmap[val[lca]]]==0:0;
+        res[idx]=freq+temp;
+
+    }
+
+    for(int i=1;i<=q;i++){
+        cout<<res[i]<<endl;
+    }
+
+
+}
