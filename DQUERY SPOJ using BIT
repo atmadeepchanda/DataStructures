@@ -1,0 +1,67 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Query{
+    public:
+    int l,r,index;
+};
+
+
+void update(int index,int value,int* BIT,int n){
+
+	for(;index <= n;index += index&(-index)){
+		BIT[index] += value;
+	}
+}
+
+int queryy(int index,int* BIT){
+	int sum=0;
+	for(;index >0;index -= index&(-index)){
+		sum += BIT[index];
+	}
+	return sum;
+}
+
+
+bool compare(Query q1,Query q2){
+    return q1.r<q2.r;
+}
+int main(){
+    int n;
+    cin>>n;
+    int* arr=new int[n+1];
+    for(int i=1;i<=n;i++){
+        cin>>arr[i];
+    }
+    int q;
+    cin>>q;
+    Query* query=new Query[q];
+    for(int i=0;i<q;i++){
+        cin>>query[i].l>>query[i].r;
+        query[i].index=i;
+    }
+    int* lastIndex=new int[1000001];
+    for(int i=0;i<=1000000;i++){
+        lastIndex[i]=-1;
+    }
+    
+    sort(query,query+q,compare);
+    int* BIT=new int[n+1]();
+    int* ans=new int[q];
+    for(int i=1,j=0;i<=n && j<q;i++){
+        if(lastIndex[arr[i]]!=-1){
+            update(lastIndex[arr[i]],-1,BIT,n);
+        }
+        update(i,1,BIT,n);
+        lastIndex[arr[i]]=i;
+        while(i==query[j].r){
+            ans[query[j].index]=queryy(i,BIT)-queryy(query[j].l-1,BIT);
+            j++;
+        }
+    }
+    
+    for(int i=0;i<q;i++){
+        cout<<ans[i]<<"\n";
+    }
+    return 0;
+}
