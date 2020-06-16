@@ -1,0 +1,72 @@
+#include<bits/stdc++.h>
+using namespace std;
+class Query{
+    public:
+    long long value;
+    int l,r,index;
+};
+bool compare(Query q1,Query q2){
+    if(q1.value!=q2.value){
+        return q1.value>q2.value;
+    }
+    
+    return q1.l>q2.l;
+}
+
+
+void update(int index,int value,int* BIT,int n){
+
+	for(;index <= n;index += index&(-index)){
+		BIT[index] += value;
+	}
+}
+
+int queryy(int index,int* BIT){
+	int sum=0;
+	for(;index >0;index -= index&(-index)){
+		sum += BIT[index];
+	}
+	return sum;
+}
+
+
+int main(){
+    int n;
+    cin>>n;
+    long long* arr=new long long[n+1];
+    for(int i=1;i<=n;i++){
+        cin>>arr[i];
+    }
+    int* BIT=new int[n+1]();
+    int q;
+    cin>>q;
+  	vector<Query> queries;
+    for(int i=0;i<q;i++){
+        Query query;
+        cin>>query.l>>query.r>>query.value;
+        query.index=i;
+        queries.push_back(query);
+    }
+    for(int i=1;i<=n;i++){
+        Query query;
+        query.l=0;
+        query.r=i;
+        query.value=arr[i];
+        queries.push_back(query);
+    }
+    int* ans=new int[q];
+    sort(queries.begin(),queries.end(),compare);
+    for(int i=0;i<queries.size();i++){
+        if(queries[i].l==0){
+            update(queries[i].r,1,BIT,n);
+        }
+        else{
+            ans[queries[i].index]=queryy(queries[i].r,BIT)-queryy(queries[i].l-1,BIT);
+        }
+    }
+    
+    for(int i=0;i<q;i++){
+        cout<<ans[i]<<"\n";
+    }
+	return 0;
+}
