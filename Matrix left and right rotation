@@ -1,0 +1,87 @@
+
+/* 
+n=number of rows
+m=number of columns
+here both n and m are even
+The two functions rotates a layer of a matrix left or right.
+Layers are given as row=0,col=0(first layer) or row=1,col=1(second layer)
+*/
+
+
+
+
+
+
+
+
+void leftRotate(long long** arr,long long n,long long m,long long row,long long col){ // anticlockwise
+    long long lu=0,ru=0,ld=0,rd=0;
+    //upper row
+    lu=arr[row][col];
+    for(long long i=col;i<m-col-1;i++){
+        arr[row][i]=arr[row][i+1];
+    }
+    //left col
+    ld=arr[n-row-1][col];
+    for(long long i=n-row-1;i>row;i--){
+        if(i==row+1){
+            arr[i][col]=lu;
+            break;
+        }
+        arr[i][col]=arr[i-1][col];
+
+    }
+    //bottom row
+    rd=arr[n-row-1][m-col-1];
+    for(long long i=m-col-1;i>col;i--){
+        if(i==col+1){
+            arr[n-row-1][i]=ld;
+            break;
+        }
+        arr[n-row-1][i]=arr[n-row-1][i-1];
+    }
+    //right col
+    for(long long i=row;i<n-row-1;i++){
+        if(i+1==n-row-1){
+            arr[i][m-col-1]=rd;
+            break;
+        }
+        arr[i][m-col-1]=arr[i+1][m-col-1];
+    }
+}
+
+void rightRotate(long long** arr,long long n,long long m,long long row,long long col){ //clockwise
+    long long ld=0,lu=0,rd=0,ru=0;
+
+    //top row
+    ru=arr[row][m-col-1];
+    for(long long i=m-col-1;i>col;i--){
+        arr[row][i]=arr[row][i-1];
+    }
+    //right col
+    rd=arr[n-row-1][m-col-1];
+    for(long long i=n-row-1;i>row;i--){
+        if(i==row+1){
+            arr[i][m-col-1]=ru;
+            break;
+        }
+        arr[i][m-col-1]=arr[i-1][m-col-1];
+    }
+    //bottom row
+    ld=arr[n-row-1][col];
+    for(long long i=col;i<m-col-1;i++){
+        if(i+1==m-col-1){
+            arr[n-row-1][i]=rd;
+            break;
+        }
+        arr[n-row-1][i]=arr[n-row-1][i+1];
+    }
+    //left col
+    for(long long i=row;i<n-row-1;i++){
+        if(i+1==n-row-1){
+            arr[i][col]=ld;
+            break;
+        }
+        arr[i][col]=arr[i+1][col];
+    }
+}
