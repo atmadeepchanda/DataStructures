@@ -1,0 +1,37 @@
+/*You are given integers n and k. Consider a list of numbers from [1, 2, ..., n] and generating every permutation of this list. For example, given n = 3 we have ["123", "132", "213", "231", "312", "321"].
+
+Return the kth (0-indexed) value of this permutation sequence as a string.
+
+Constraints 1<=n<=10
+*/
+//this approach works as long as the code works in O(n^2) and of course as long as factorial of large values can be stored somehow(without any modulus ofcourse)
+//Code
+
+int fact[]={1,1,2,6,24,120,720,5040,40320,362880,3628800};
+class Solution {
+    public:
+    string solve(int n, int k) {
+        // Write your code here
+        k++;
+        string ans="";
+        bool* visited=new bool[11]();
+        for(int i=0;i<n;i++){
+            for(int j=1;j<=n;j++){
+                if(visited[j]){
+                    continue;
+                }
+                int f=fact[n-i-1];//find the number of permutaions of length i+1 which are lexicographically smaller if //we have j at postion i
+                if(k>f){ //implies that our desired permutaion is somewhere after 
+                    k-=f;
+                }
+                else{
+                    ans.append(to_string(j));
+                    visited[j]=true;
+                    break;
+                }
+            }
+                
+        }
+        return ans;
+    }
+};
