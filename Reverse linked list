@@ -1,0 +1,10 @@
+LLNode* reverse(LLNode* p) {
+    LLNode* prev = NULL;
+    while (p) {
+        LLNode* next = p->next;
+        p->next = prev;
+        prev = p;
+        p = next;
+    }
+    return prev;
+}
