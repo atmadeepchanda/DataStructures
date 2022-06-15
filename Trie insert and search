@@ -1,0 +1,47 @@
+class Trie {
+    public:
+    Trie** children;
+    bool end;
+    Trie() {
+        children = new Trie*[26]();
+        end = false;
+    }
+
+    void add(string s) {
+        Trie* curr = this;
+        for (char& c : s) {
+            int ch = c - 'a';
+            if (curr->children[ch]) {
+                curr = curr->children[ch];
+            } else {
+                curr->children[ch] = new Trie();
+                curr = curr->children[ch];
+            }
+        }
+        curr->end = true;
+    }
+
+    bool exists(string word) {
+        Trie* curr = this;
+        for (char& c : word) {
+            int ch = c - 'a';
+            if (!curr->children[ch]) {
+                return false;
+            }
+            curr = curr->children[ch];
+        }
+        return curr->end;
+    }
+
+    bool startswith(string p) {
+        Trie* curr = this;
+        for (char& c : p) {
+            int ch = c - 'a';
+            if (!curr->children[ch]) {
+                return false;
+            }
+            curr = curr->children[ch];
+        }
+        return true;
+    }
+};
