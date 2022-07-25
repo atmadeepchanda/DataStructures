@@ -1,0 +1,46 @@
+/*
+question link - https://www.interviewbit.com/problems/gas-station/
+*/
+
+
+//Solution below
+
+int Solution::canCompleteCircuit(const vector<int> &A, const vector<int> &B) {
+
+    int petro=0;
+
+    int start=0;
+
+    int n=A.size();
+
+    
+
+    // Iterate as circular by taking i%n then 
+
+    // find start which is less than n.
+
+    for(int i=0;i<2*n&&start<n;i++){
+
+        // If petrol becomes negative it is not 
+
+        //possible for any before to become start
+
+        petro+=A[i%n]-B[i%n];
+
+        if(petro<0){
+
+            start=i+1;
+
+            petro=0;
+
+        }
+
+    }
+
+    
+
+    if(start>=n)return -1;
+
+    return start;
+
+}
