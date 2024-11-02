@@ -10,17 +10,19 @@ class node{
 
 node query(node* tree,int treeNode,int start,int end,int left,int right){
     
-    
+    // No overlap
      if(start>right || end<left){
         node n;
         n.maximum=INT_MIN;
         n.smaximum=INT_MIN;
         return n;
     }
-    
+    // Total overlap
     if(start>=left && end<=right){
         return tree[treeNode];
     }
+
+    // Partial overlap
     node n;
     int mid=(start+end)/2;
     node l=query(tree,2*treeNode,start,mid,left,right);
